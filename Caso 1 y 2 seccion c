@@ -1,0 +1,148 @@
+Caso 1
+public abstract class TarjetaCredito {
+    public abstract String getTipo();
+}
+
+class TarjetaBasica extends TarjetaCredito {
+    @Override
+    public String getTipo() {
+        return "Tarjeta Básica";
+    }
+}
+
+class TarjetaPremium extends TarjetaCredito {
+    @Override
+    public String getTipo() {
+        return "Tarjeta Premium";
+    }
+}
+
+class TarjetaVIP extends TarjetaCredito {
+    @Override
+    public String getTipo() {
+        return "Tarjeta VIP";
+    }
+}
+
+public interface TarjetaCreditoFactory {
+    TarjetaCredito crearTarjeta(Cliente cliente);
+}
+
+class Tienda implements TarjetaCreditoFactory {
+
+    @Override
+    public TarjetaCredito crearTarjeta(Cliente cliente) {
+        switch (cliente.getTipoAfiliacion()) {
+            case "BASICA":
+                return new TarjetaBasica();
+            case "PREMIUM":
+                return new TarjetaPremium();
+            case "VIP":
+                return new TarjetaVIP();
+            default:
+                throw new IllegalArgumentException("Tipo de afiliación desconocido");
+        }
+    }
+
+    public TarjetaCredito solicitarAfiliacion(Cliente cliente) {
+        return crearTarjeta(cliente);
+    }
+}
+
+public class Cliente {
+    private String tipoAfiliacion;
+
+    public Cliente(String nombre, String tipoAfiliacion) {
+        this.tipoAfiliacion = tipoAfiliacion;
+    }
+
+    public String getTipoAfiliacion() {
+        return tipoAfiliacion;
+    }
+
+    public TarjetaCredito solicitarAfiliacion(Tienda tienda) {
+        return tienda.solicitarAfiliacion(this);
+    }
+}
+
+Caso 2
+public class Facade {
+    private CanalFacade canalWeb;
+    private CanalFacade canalMovil;
+    private CanalFacade canalTelefonico;
+
+    public Facade() {
+        this.canalWeb = new CanalWeb();
+        this.canalMovil = new CanalMovil();
+        this.canalTelefonico = new CanalTelefonico();
+    }
+
+    public void realizarTransaccion() {
+        if (canalWeb.puedeRealizar()) {
+            canalWeb.realizarTransaccion();
+        } else if (canalMovil.puedeRealizar()) {
+            canalMovil.realizarTransaccion();
+        } else if (canalTelefonico.puedeRealizar()) {
+            canalTelefonico.realizarTransaccion();
+        } else {
+            System.out.println("Ningún canal disponible para realizar la transacción.");
+        }
+    }
+}
+
+public class Client {
+    private Facade facade;
+
+    public Client() {
+        this.facade = new Facade();
+    }
+
+    public void obtenerServicio() {
+        facade.realizarTransaccion();
+    }
+}
+
+public interface CanalFacade {
+    boolean puedeRealizar();
+    void realizarTransaccion();
+}
+
+class CanalWeb implements CanalFacade {
+    @Override
+    public boolean puedeRealizar() {
+        
+        return false;
+    }
+
+    @Override
+    public void realizarTransaccion() {
+        System.out.println("Transacción realizada vía Web.");
+    }
+}
+
+
+class CanalMovil implements CanalFacade {
+    @Override
+    public boolean puedeRealizar() {
+        return true;
+    }
+
+    @Override
+    public void realizarTransaccion() {
+        System.out.println("Transacción realizada vía Móvil.");
+    }
+}
+
+
+class CanalTelefonico implements CanalFacade {
+    @Override
+    public boolean puedeRealizar() {
+        return true;
+    }
+
+    @Override
+    public void realizarTransaccion() {
+        System.out.println("Transacción realizada vía Telefónica.");
+    }
+}
+
