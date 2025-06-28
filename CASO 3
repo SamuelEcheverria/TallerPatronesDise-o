@@ -1,0 +1,98 @@
+package com.example;
+
+public abstract class BaseDecoratorNotification {
+
+    public  BaseDecoratorNotification(){
+
+    }
+
+    public abstract void enviarmensaje();
+
+    public abstract void baseDecorate();
+
+
+}
+
+package com.example;
+
+public class Cliente {
+
+}
+
+package com.example;
+
+public interface Notificacion {
+    public void enviarmensaje();
+
+}
+
+package com.example;
+
+public class NotificacionAPP extends BaseDecoratorNotification{
+
+    @Override
+    public void enviarmensaje() {
+        // LOGICA
+    }
+    @Override
+    public void baseDecorate() {
+        this.baseDecorate();
+        //LOGICA
+    }
+    
+
+}
+
+
+package com.example;
+
+public class NotificacionBase implements Notificacion{
+
+    private NotificacionSMS Nsms;
+    
+    @Override
+    public void enviarmensaje() {
+        // LOGICA
+    }
+
+    Nsms.baseDecorate();
+
+}
+
+
+package com.example;
+
+public class NotificacionEmail extends BaseDecoratorNotification{
+
+    @Override
+    public void enviarmensaje() {
+        // LOGICA
+    }
+
+     @Override
+    public void baseDecorate() {
+        //LOGICA
+    }
+
+}
+
+
+package com.example;
+
+public class NotificacionSMS extends BaseDecoratorNotification {
+
+    private NotificacionEmail Nemail;
+
+    @Override
+    public void enviarmensaje() {
+        // LOGICA
+    }
+
+    @Override
+    public void baseDecorate() {
+        Nemail.baseDecorate();
+        //LOGICA
+    }
+    
+
+}
